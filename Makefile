@@ -1,6 +1,6 @@
 #options
-INCLUDE := -I ~/include
-LDFLAGS := -L ~/lib -lpthread -lm
+INCLUDE := -I $(HOME)/include
+LDFLAGS := -L $(HOME)/lib -lpthread -lm
 CFLAGS := -W -Wall -g
 
 #targets
@@ -10,10 +10,14 @@ server: main.o
 	gcc -o server main.o $(LDFLAGS)
 
 main.o: main.c
-	gcc $(CFLAGS) -c main.c -I ~/include
+	gcc $(CFLAGS) -c main.c -I $(INCLUDE)
 
 run:
-	./server
+	if [-f server]; then \
+		./server; \
+	else \
+		echo "Error: server executable not found. Run 'make' first."; \
+	fi
 
 debug:
 	gdb server
