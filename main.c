@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
@@ -8,16 +9,22 @@
 int init_socket(void);
 
 int main(void){
-	init_socket();
+	int socket_fd = init_socket();
+	if(socket_fd == 0){
+		close(socket_fd);
+		perror("init_socket");
+		exit(EXIT_FAILURE);
+	}
 }
 
 int init_socket(void){
-	int socket_fd;					// socket file descriptor
+	int socket_fd = 0;				// socket file descriptor
 	struct sockaddr_in server_addr;	// socket config
 
 	// create server socket
 	socket_fd = socket(AF_INET, SOCK_STREAM, 0); // Initialize the socket
 	if(socket_fd < 0){	// Check if initialization failed
+		close(socket_fd);
 		perror("socket failed");
 		exit(EXIT_FAILURE);
 	}
@@ -37,7 +44,9 @@ int init_socket(void){
 	// Listen for connections
 	if(listen(socket_fd, 10) < 0){ /* Listen for traffic
 									  and check for failure. */
+		close(socket_fd);
 		perror("listen failed");
 		exit(EXIT_FAILURE);
 	}
+	return socket_fd;
 }
