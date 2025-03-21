@@ -1,6 +1,6 @@
 #options
 INCLUDE := -I ~/include
-LDFLAGS := -L ~/lib -lsocket -lm
+LDFLAGS := -L ~/lib -lpthread -lm
 CFLAGS := -W -Wall -g
 
 #targets
@@ -19,4 +19,4 @@ debug:
 	gdb server
 
 clean:
-	rm -f *.o server
+	rm -f *.o .main.c.swp server
